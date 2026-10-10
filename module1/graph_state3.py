@@ -1,9 +1,9 @@
 from langgraph.graph import START, END, StateGraph
-from typing_extensions import TypeDict
+from typing_extensions import TypedDict
 from typing import Literal 
 
 #state 
-class State(TypeDict):
+class State(TypedDict):
     graph_str: str
 
 #node 
@@ -31,3 +31,16 @@ def next_step(state: State) -> Literal["node2", "node3"]:
         return "node2"
 
 #graph
+
+builder = StateGraph(State)
+
+builder.add_node("node1", node1)
+builder.add_node("node2", node2)
+builder.add_node("node3", node3)
+
+builder.add_edge(START, "node1")
+builder.add_conditional_edges("node1", next_step)
+builder.add_edge("node2", END)
+builder.add_edge("node3", END)
+
+graph = builder.compile()
