@@ -24,10 +24,12 @@ def node1(state: State) -> State:
     """Pick a number between 1 and 10 and store it in the state."""
     model_response = model_llm.invoke("reply with number only ")
 
-    if isinstance(int(model_response.content), int):
-        return {"graph_int": int(model_response.content), "graph_str": state["graph_str"] + "passed by node 1 "}
+    try:
+        num = int(model_response.text.strip())
+    except ValueError:
+        num = 0
 
-    return{"graph_int":0, "graph_str": state["graph_str"] + "passed by node 1 "}
+    return {"graph_int": num, "graph_str": state["graph_str"] + "passed by node 1 "}
 
 def node2(state: State) -> State:
     """choose umber between 2 and 3"""
@@ -44,15 +46,15 @@ def node3(state: State) -> State:
 
 #edge 
 
-def next_step(state: State) -> Literal["node2", "node3", "END"]:
+def next_step(state: State)-> Literal["node2", "node3", END]:
     """check state and return which nbode to go """
-    number_state =state["graph_int"]
-    if number_state == 0:
+    number_state = state.get("graph_int", 0)
+    if number_state == 2:
         return "node2"
     elif number_state == 3:
         return "node3"
     else:
-        return "END"
+        return END
 
 #graph
 
@@ -64,6 +66,11 @@ builder.add_node("node3", node3)
 
 
 builder.add_edge(START, "node1")
+builder.add_conditional_edges("node1", next_step)
+builder.add_edge("node2", END)
+builder.add_edge("node3", END)
 
 
 
+
+graph = builder.compile()

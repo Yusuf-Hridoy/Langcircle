@@ -3,7 +3,8 @@
     "graphs":{
         "graph_state":"./module1/graph_state.py:graph",
         "graph_state1":"./module1/graph_state1.py:graph",
-        "graph_state2":"./module1/graph_state3.py:graph"
+        "graph_state2":"./module1/graph_state3.py:graph",
+        "graph_state4":"./module1/graph_state4.py:graph"
 
 
     },
